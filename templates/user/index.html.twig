@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Dashboard Użytkownika{% endblock %}
 
 {% block body %}
-    User login
+    <div class="p-10">
+        <h1 class="text-3xl font-bold text-indigo-600 underline">
+            Cześć, zalogowałeś się!
+        </h1>
+        <p class="mt-4 text-gray-600 bg-gray-100 p-4 rounded-lg border border-gray-200">
+            To jest Twój dashboard użytkownika zabezpieczony Tailwindem.
+        </p>
+    </div>
 {% endblock %}
