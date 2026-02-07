@@ -1,11 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Zaloguj się do systemu{% endblock %}
 
 {% block body %}
+<<<<<<< Updated upstream
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+=======
+    {% if error and error.messageKey == 'Too many failed login attempts, please try again in %minutes% minutes.' %}
+        <div class="text-center py-12 px-4 bg-white shadow-xl rounded-2xl border-2 border-red-100">
+            <h2 class="text-2xl font-black text-red-600 mb-2">Dostęp czasowo zablokowany</h2>
+            <p class="text-gray-600">Ze względów bezpieczeństwa musisz odczekać 15 minut.</p>
+        </div>
+    {% else %}
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Wyloguj się</a>
+                </div>
+            {% endif %}
+            <h1 class="h3 mb-3 font-weight-normal">Zaloguj się do systemu</h1>
+            <label for="inputUsername">Login</label>
+            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
+            <label for="inputPassword">Hasło</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-lg btn-primary" type="submit">
+                Zaloguj się
+            </button>
+        </form>
+>>>>>>> Stashed changes
     {% endif %}
 
     {% if app.user %}
