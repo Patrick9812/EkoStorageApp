@@ -39,7 +39,15 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin/dashboard, roles: ROLE_ADMIN }
+        - { path: ^/admin/dashboard/createNewUser, roles: ROLE_ADMIN }
+        - { path: ^/admin/article/inbound, roles: ROLE_ADMIN }
+        - { path: ^/admin/article/outbound, roles: ROLE_ADMIN }
+        - { path: ^/admin/storage/create-storage, roles: ROLE_ADMIN }
+        - { path: ^/admin/article/create-article, roles: ROLE_ADMIN }
+        - { path: ^/user/dashboard, roles: ROLE_USER }
+        - { path: ^/user/article/inbound, roles: ROLE_USER }
+        - { path: ^/user/article/outbound, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
