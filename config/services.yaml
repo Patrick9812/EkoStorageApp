@@ -19,5 +19,10 @@ services:
     App\:
         resource: '../src/'
 
+    App\DataFixtures\AppFixtures:
+        arguments:
+            $adminPassword: '%env(ADMIN_PASSWORD)%'
+            $adminLogin: '%env(ADMIN_LOGIN)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
