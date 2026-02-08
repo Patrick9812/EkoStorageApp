@@ -3,11 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Form\CreateUserType;
+use App\Form\IncommingTransactionsType;
+use App\Form\OutcommingTransactionsType;
 use App\Form\NewArticleType;
 use App\Form\NewStorageType;
+use App\Repository\ArticleRepository;
+use App\Repository\WarehouseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,9 +21,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AdminController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_admin_dashboard')]
-    public function index(): Response
+    public function index(ArticleRepository $articleRepository, WarehouseRepository $warehouseRepo): Response
     {
-        return $this->render('admin/index.html.twig', []);
+        $articles = $articleRepository->findAll();
+        $warehouse = $warehouseRepo->findAll();
+        return $this->render('admin/index.html.twig', ["articles" => $articles, "warehouses" => $warehouse]);
     }
 
     #[Route('/dashboard/createNewUser', name: 'app_admin_new_user')]
@@ -32,13 +39,17 @@ final class AdminController extends AbstractController
     #[Route('/article/inbound', name: 'app_admin_inbound')]
     public function inbound(): Response
     {
-        return $this->render('admin/inbound.html.twig', []);
+        $incommingTransaction = new Transaction();
+        $form = $this->createForm(IncommingTransactionsType::class, $incommingTransaction);
+        return $this->render('inbound.html.twig', ["form" => $form]);
     }
 
     #[Route('/article/outbound', name: 'app_admin_outbound')]
     public function outbound(): Response
     {
-        return $this->render('admin/outbound.html.twig', []);
+        $outcommingTransaction = new Transaction();
+        $form = $this->createForm(OutcommingTransactionsType::class, $outcommingTransaction);
+        return $this->render('outbound.html.twig', ["form" => $form]);
     }
 
     #[Route('/storage/create-storage', name: 'app_admin_create_storage')]

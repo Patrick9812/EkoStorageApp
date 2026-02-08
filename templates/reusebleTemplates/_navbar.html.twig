@@ -1,0 +1,31 @@
+<div class="px-[10px] w-full h-[60px] bg-[#072240] flex items-center justify-evenly">
+	<p class="text-white">
+		Użytkownik:
+		{% if is_granted('ROLE_ADMIN') %}
+			Administrator
+		{% elseif is_granted('ROLE_USER')  %}
+			Pracownik
+		{% endif %}
+
+	</p>
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_admin_outbound') }}" class="text-white">
+			Wydanie
+		</a>
+		<a href="{{ path('app_admin_inbound') }}" class="text-white">
+			Przyjęcie
+		</a>
+	{% elseif is_granted('ROLE_USER')  %}
+		<a href="{{ path('app_user_outbound') }}" class="text-white">
+			Wydanie
+		</a>
+		<a href="{{ path('app_user_inbound') }}" class="text-white">
+			Przyjęcie
+		</a>
+	{% endif %}
+
+
+	<a href="{{ path('app_logout') }}" class="text-white">
+		Wyloguj się
+	</a>
+</div>

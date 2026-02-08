@@ -1,0 +1,47 @@
+{# templates/admin/outbound.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Wydanie Artykułu
+{% endblock %}
+
+{% block body %}
+	<div class="flex items-center justify-center min-h-screen w-full bg-[#124278] pt-[80px] pb-[40px]">
+		<div class="w-full max-w-xl p-8 bg-white rounded-3xl shadow-2xl border border-white/20">
+			<div class="flex items-center gap-4 mb-8">
+				<div>
+					<h1 class="text-3xl font-black">Wydanie Artykułu</h1>
+					<p class="text-slate-500 text-sm font-medium">Zdejmij towar ze stanu magazynowego</p>
+				</div>
+			</div>
+
+			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+			<div>
+				{{ form_label(form.article, 'Wybierz Artykuł', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
+				{{ form_widget(form.article, {'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all text-lg font-medium'}}) }}
+			</div>
+
+			<div>
+				{{ form_label(form.quantity, 'Ilość do wydania', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
+				{{ form_widget(form.quantity, {'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all text-2xl font-black', 'placeholder': '0.000'}}) }}
+			</div>
+
+			<div class="bg-green-50 border border-green-100 p-4 rounded-2xl">
+				<p class="text-xs text-green-700 font-medium leading-relaxed italic">
+					Uwaga: System automatycznie sprawdzi dostępność towaru na wybranym magazynie przed zatwierdzeniem operacji.
+				</p>
+			</div>
+
+			<div class="pt-4">
+				<button type="submit" class="w-full py-4 bg-[#16a603] hover:bg-[#0e6b02] text-white font-black rounded-xl shadow-lg shadow-green-200 transition-all active:scale-[0.98] uppercase tracking-widest">
+					Zatwierdź Wydanie
+				</button>
+				<div class="text-center mt-6">
+					<a href="{{ path('app_admin_dashboard') }}" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">
+						Powrót do panelu
+					</a>
+				</div>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}

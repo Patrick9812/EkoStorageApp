@@ -1,12 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard
-{% endblock %}
-
 {% block body %}
-	{% include '/reusebleTemplates/navbar.html.twig' %}
+	{% include '/reusebleTemplates/_navbar.html.twig' %}
 
-	<div class="flex flex-col items-center justify-center min-h-[calc(100vh-120px)] w-full bg-[#124278] pt-[60px] pb-[60px]"></div>
+	<div class="flex flex-col items-center min-h-[calc(100vh-60px)] w-full bg-[#124278] pt-[60px] pb-[60px] px-4">
+		<h1 class="text-white text-2xl font-black mb-6 uppercase">Panel Administratora - Stany</h1>
+		<div class="flex flex-col items-center min-h-[calc(100vh-60px)] w-full bg-[#124278] pt-[60px] pb-[60px] px-4">
 
-	{% include '/reusebleTemplates/footer.html.twig' %}
+			<div class="w-full max-w-6xl flex justify-end mb-4">
+				<select id="warehouse-filter" class="bg-white text-slate-700 py-3 px-6 rounded-2xl font-bold shadow-lg border-none focus:ring-2 focus:ring-blue-400">
+					<option value="all">Wszystkie magazyny</option>
+					{% for warehouse in warehouses %}
+						<option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			{% include 'reusebleTemplates/_inventory_table.html.twig' %}
+		</div>
+
+		<script>
+			document.getElementById('warehouse-filter').addEventListener('change', function () {
+const val = this.value;
+document.querySelectorAll('.warehouse-row').forEach(row => {
+row.style.display = (val === 'all' || row.dataset.warehouseId === val) ? '' : 'none';
+});
+});
+		</script>
+
+		{% include 'reusebleTemplates/_inventory_table.html.twig' %}
+	</div>
+	{% include '/reusebleTemplates/_footer.html.twig' %}
 {% endblock %}

@@ -69,4 +69,19 @@ class Article
     {
         return $this->transactions;
     }
+
+    public function getStockInWarehouse(Warehouse $warehouse): float
+    {
+        $stock = 0.0;
+        foreach ($this->transactions as $transaction) {
+            if ($transaction->getWarehouse() === $warehouse) {
+                if ($transaction->getType()->value === 'in') {
+                    $stock += (float) $transaction->getQuantity();
+                } elseif ($transaction->getType()->value === 'out') {
+                    $stock -= (float) $transaction->getQuantity();
+                }
+            }
+        }
+        return $stock;
+    }
 }

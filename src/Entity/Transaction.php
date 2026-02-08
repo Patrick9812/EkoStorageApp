@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\TransactionType;
 use App\Repository\TransactionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,6 +45,14 @@ class Transaction
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
     private ?string $VAT = null;
 
+    #[ORM\OneToMany(targetEntity: InvoiceFile::class, mappedBy: 'transaction', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $invoiceFiles;
+
+    public function __construct()
+    {
+        $this->invoiceFiles = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +62,7 @@ class Transaction
     {
         return $this->type;
     }
+
     public function setType(TransactionType $type): static
     {
         $this->type = $type;
@@ -62,6 +73,7 @@ class Transaction
     {
         return $this->quantity;
     }
+
     public function setQuantity(string $quantity): static
     {
         $this->quantity = $quantity;
@@ -72,6 +84,7 @@ class Transaction
     {
         return $this->priceNetto;
     }
+
     public function setPriceNetto(?string $priceNetto): static
     {
         $this->priceNetto = $priceNetto;
@@ -82,6 +95,7 @@ class Transaction
     {
         return $this->createdAt;
     }
+
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
@@ -100,6 +114,7 @@ class Transaction
     {
         return $this->VAT;
     }
+
     public function setVAT(?string $VAT): static
     {
         $this->VAT = $VAT;
@@ -110,6 +125,7 @@ class Transaction
     {
         return $this->user;
     }
+
     public function setUser(?User $user): static
     {
         $this->user = $user;
@@ -120,6 +136,7 @@ class Transaction
     {
         return $this->warehouse;
     }
+
     public function setWarehouse(?Warehouse $warehouse): static
     {
         $this->warehouse = $warehouse;
@@ -130,9 +147,40 @@ class Transaction
     {
         return $this->article;
     }
+
     public function setArticle(?Article $article): static
     {
         $this->article = $article;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InvoiceFile>
+     */
+    public function getInvoiceFiles(): Collection
+    {
+        return $this->invoiceFiles;
+    }
+
+    public function addInvoiceFile(InvoiceFile $invoiceFile): static
+    {
+        if (!$this->invoiceFiles->contains($invoiceFile)) {
+            $this->invoiceFiles->add($invoiceFile);
+            $invoiceFile->setTransaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoiceFile(InvoiceFile $invoiceFile): static
+    {
+        if ($this->invoiceFiles->removeElement($invoiceFile)) {
+            // set the owning side to null (unless already changed)
+            if ($invoiceFile->getTransaction() === $this) {
+                $invoiceFile->setTransaction(null);
+            }
+        }
+
         return $this;
     }
 }

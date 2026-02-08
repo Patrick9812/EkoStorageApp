@@ -1,0 +1,33 @@
+<div class="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-6">
+	<div class="overflow-x-auto">
+		<table class="w-full text-left border-collapse">
+			<thead>
+				<tr class="bg-slate-50 text-slate-400 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
+					<th class="px-8 py-4">Produkt</th>
+					<th class="px-8 py-4">Magazyn</th>
+					<th class="px-8 py-4 text-right">Ilość</th>
+					<th class="px-8 py-4 text-center">Status</th>
+				</tr>
+			</thead>
+			<tbody class="divide-y divide-slate-100" id="inventory-table">
+				{% for article in articles %}
+					{% for warehouse in warehouses %}
+						{% set stock = article.getStockInWarehouse(warehouse) %}
+						{% if stock != 0 %}
+							<tr class="hover:bg-slate-50 transition-colors warehouse-row" data-warehouse-id="{{ warehouse.id }}">
+								<td class="px-8 py-4 font-bold text-slate-800">{{ article.name }}</td>
+								<td class="px-8 py-4">
+									<span class="px-2 py-1 bg-slate-100 rounded text-xs">{{ warehouse.name }}</span>
+								</td>
+								<td class="px-8 py-4 text-right font-black">{{ stock|number_format(3, ',', ' ') }}</td>
+								<td class="px-8 py-4 text-center">
+									<span class="inline-block w-3 h-3 rounded-full {{ stock > 0 ? 'bg-green-500' : 'bg-red-500' }}"></span>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>

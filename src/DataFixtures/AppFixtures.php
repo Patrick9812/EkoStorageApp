@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Article;
 use App\Entity\User;
+use App\Entity\Warehouse;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -22,6 +24,15 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $warehouse = new Warehouse();
+        $warehouse->setName('Magazyn Centralny');
+        $manager->persist($warehouse);
+
+        $article = new Article();
+        $article->setName('Paleta Drewniana');
+        $article->setUnit('szt.');
+        $article->setCode('123');
+        $manager->persist($article);
         $admin = new User();
         $admin->setUsername($this->adminLogin);
         $admin->setFullname('Główny Administrator');

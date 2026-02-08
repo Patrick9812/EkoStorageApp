@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Transaction;
+use App\Form\IncommingTransactionsType;
+use App\Form\OutcommingTransactionsType;
+use App\Repository\ArticleRepository;
+use App\Repository\WarehouseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,20 +15,31 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_user_dashboard')]
-    public function index(): Response
+    public function index(ArticleRepository $articleRepository, WarehouseRepository $warehouseRepo): Response
     {
-        return $this->render('user/index.html.twig', []);
+        $user = $this->getUser();
+        $userWarehouses = $warehouseRepo->findBy(['users' => $user]);
+        $articles = $articleRepository->findAll();
+
+        return $this->render('user/index.html.twig', [
+            "articles" => $articles,
+            "warehouses" => $userWarehouses
+        ]);
     }
 
     #[Route('/article/inbound', name: 'app_user_inbound')]
     public function inbound(): Response
     {
-        return $this->render('user/inbound.html.twig', []);
+        $incommingTransaction = new Transaction();
+        $form = $this->createForm(IncommingTransactionsType::class, $incommingTransaction);
+        return $this->render('inbound.html.twig', ["form" => $form]);
     }
 
     #[Route('/article/outbound', name: 'app_user_outbound')]
     public function outbound(): Response
     {
-        return $this->render('user/outbound.html.twig', []);
+        $outcommingTransaction = new Transaction();
+        $form = $this->createForm(OutcommingTransactionsType::class, $outcommingTransaction);
+        return $this->render('outbound.html.twig', ["form" => $form]);
     }
 }

@@ -19,7 +19,8 @@ class InvoiceFile
     #[ORM\Column(length: 255)]
     private ?string $originalName = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Transaction::class, inversedBy: 'invoiceFiles')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Transaction $transaction = null;
 
     public function getId(): ?int
