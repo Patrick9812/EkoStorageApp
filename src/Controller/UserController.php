@@ -17,8 +17,8 @@ final class UserController extends AbstractController
     #[Route('/dashboard', name: 'app_user_dashboard')]
     public function index(ArticleRepository $articleRepository, WarehouseRepository $warehouseRepo): Response
     {
-        $user = $this->getUser();
-        $userWarehouses = $warehouseRepo->findBy(['users' => $user]);
+        $userWarehouses = $warehouseRepo->findAllForUser($this->getUser());
+
         $articles = $articleRepository->findAll();
 
         return $this->render('user/index.html.twig', [

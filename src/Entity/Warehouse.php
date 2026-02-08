@@ -18,7 +18,7 @@ class Warehouse
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'warehouses')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'warehouses')]
     private Collection $users;
 
     #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'warehouse')]
@@ -52,12 +52,17 @@ class Warehouse
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
+            $user->addWarehouse($this);
         }
+
         return $this;
     }
     public function removeUser(User $user): static
     {
-        $this->users->removeElement($user);
+        if ($this->users->removeElement($user)) {
+            $user->removeWarehouse($this);
+        }
+
         return $this;
     }
 

@@ -28,6 +28,15 @@ class NewStorageType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Utwórz magazyn'
             ]);
+
+        $builder
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                'multiple' => true,
+                'expanded' => true,
+                'by_reference' => false,
+                'choice_label' => 'fullname',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

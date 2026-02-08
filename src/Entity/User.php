@@ -33,7 +33,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToMany(targetEntity: Warehouse::class, mappedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Warehouse::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'warehouse_user')]
     private Collection $warehouses;
 
     #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'user')]

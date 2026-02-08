@@ -16,6 +16,9 @@ use App\Repository\WarehouseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin')]
 final class AdminController extends AbstractController
@@ -29,11 +32,34 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/dashboard/createNewUser', name: 'app_admin_new_user')]
-    public function createUser(): Response
-    {
-        $new_user = new User();
-        $form = $this->createForm(CreateUserType::class, $new_user);
-        return $this->render('admin/create-user.html.twig', ["form" => $form]);
+    public function createUser(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $userPasswordHasher
+    ): Response {
+        $newUser = new User();
+        $form = $this->createForm(CreateUserType::class, $newUser);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $plainPassword = $form->get('password')->getData();
+
+                $hashedPassword = $userPasswordHasher->hashPassword($newUser, $plainPassword);
+                $newUser->setPassword($hashedPassword);
+
+                $entityManager->persist($newUser);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Użytkownik utworzony!');
+                return $this->redirectToRoute('app_admin_dashboard');
+            } else {
+            }
+        }
+
+        return $this->render('admin/create-user.html.twig', [
+            "form" => $form
+        ]);
     }
 
     #[Route('/article/inbound', name: 'app_admin_inbound')]
@@ -53,18 +79,44 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/storage/create-storage', name: 'app_admin_create_storage')]
-    public function createStorage(): Response
+    public function createStorage(Request $request, EntityManagerInterface $entityManager): Response
     {
         $warehouse = new Warehouse();
         $form = $this->createForm(NewStorageType::class, $warehouse);
-        return $this->render('admin/create-storage.html.twig', ["form" => $form]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($warehouse);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Magazyn ' . $warehouse->getName() . ' został utworzony!');
+
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        return $this->render('admin/create-storage.html.twig', [
+            "form" => $form
+        ]);
     }
 
-    #[Route('/article/create-article', name: 'app_admin_create_article')]
-    public function createArticle(): Response
+    #[Route('/article/create-article', name: 'app_admin_create_article', methods: ['GET', 'POST'])]
+    public function createArticle(Request $request, EntityManagerInterface $entityManager): Response
     {
         $article = new Article();
         $form = $this->createForm(NewArticleType::class, $article);
-        return $this->render('admin/create-article.html.twig', ["form" => $form]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($article);
+            $entityManager->flush();
+            $this->addFlash('success', 'Artykuł ' . $article->getName() . ' został dodany.');
+            return $this->redirectToRoute('app_admin_dashboard');
+        }
+
+        return $this->render('admin/create-article.html.twig', [
+            "form" => $form
+        ]);
     }
 }

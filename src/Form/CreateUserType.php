@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Warehouse;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer; // Ważny import!
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -25,7 +26,7 @@ class CreateUserType extends AbstractType
                     'Pracownik' => 'ROLE_USER',
                     'Administrator' => 'ROLE_ADMIN',
                 ],
-                'multiple' => true,
+                'multiple' => false,
                 'expanded' => true,
                 'label' => 'Uprawnienia'
             ])
@@ -45,6 +46,16 @@ class CreateUserType extends AbstractType
             ])
             ->add('submit', SubmitType::class, ['label' => 'Zarejestruj użytkownika'])
         ;
+
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesArray) {
+                    return $rolesArray[0] ?? null;
+                },
+                function ($rolesString) {
+                    return [$rolesString];
+                }
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
