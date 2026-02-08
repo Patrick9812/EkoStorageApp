@@ -1,14 +1,19 @@
 <div class="px-[10px] w-full h-[60px] bg-[#072240] flex items-center justify-evenly sticky bottom-0 left-0">
-	<a href="{{ path('app_logout') }}" class="text-white">
-		Wyloguj się
-	</a>
-	{% if is_granted('ROLE_ADMIN') and app.request.attributes.get('_route') == 'app_user_dashboard' %}
-		<a href="{{ path('app_admin_dashboard') }}" class="text-white">
-			Przejdź do panelu Administracyjnego
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_admin_new_user') }}" class="text-white">
+			Stwórz nowego użytkownika
 		</a>
-	{% elseif is_granted('ROLE_USER') and app.request.attributes.get('_route') == 'app_admin_dashboard' %}
-		<a href="{{ path('app_user_dashboard') }}" class="text-white">
-			Przejdź do panelu Użytkownika
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_admin_create_storage') }}" class="text-white">
+			Stwórz Magazyn
+		</a>
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_admin_create_article') }}" class="text-white">
+			Stwórz Artykuł
 		</a>
 	{% endif %}
 </div>

@@ -1,9 +1,10 @@
 <div class="px-[10px] w-full h-[60px] bg-[#072240] flex items-center justify-evenly">
 	<p class="text-white">
+		Użytkownik:
 		{% if is_granted('ROLE_ADMIN') %}
-			Użytkownik: Administrator
+			Administrator
 		{% elseif is_granted('ROLE_USER')  %}
-			Użytkownik: Pracownik
+			Pracownik
 		{% endif %}
 
 	</p>

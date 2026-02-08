@@ -1,7 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Nowy Magazyn
+{% endblock %}
 
 {% block body %}
-    Admin Tworzenie nowego magazynu
+	<div class="flex items-center justify-center min-h-screen w-full bg-[#124278] pt-[60px] pb-[60px]">
+		<div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl border border-white/20">
+			<h1 class="text-3xl font-black text-center text-slate-800 mb-2 tracking-tighter">
+				Nowy Magazyn
+			</h1>
+			<p class="text-center text-slate-500 text-sm mb-8 font-medium">Zdefiniuj nową przestrzeń składowania</p>
+
+			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+			<div>
+				{{ form_label(form.name, 'Nazwa Magazynu', {
+                        'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1'}
+                    }) }}
+				{{ form_widget(form.name, {
+                        'attr': {
+                            'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all',
+                            'placeholder': 'np. Magazyn Główny A'
+                        }
+                    }) }}
+			</div>
+
+			<div>
+				{{ form_label(form.users, 'Przypisz Pracowników', {
+                    'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1'}
+                }) }}
+
+				<div class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus-within:ring-2 focus-within:ring-indigo-500 transition-all max-h-48 overflow-y-auto">
+					<div class="space-y-2 py-1">
+						{% for child in form.users %}
+							<label class="flex items-center gap-3 cursor-pointer group">
+								{{ form_widget(child, {
+                        'attr': {'class': 'w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer'}
+                    }) }}
+								<span class="text-slate-700 text-sm font-medium group-hover:text-indigo-600 transition-colors">
+									{{ child.vars.label }}
+								</span>
+							</label>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			<div class="pt-2">
+				{{ form_widget(form.submit, {
+                        'label': 'Utwórz magazyn',
+                        'attr': {
+                            'class': 'w-full py-4 bg-[#16a603] hover:bg-[#0e6b02] text-white font-bold rounded-xl shadow-lg shadow-green-200 transition-all active:scale-[0.98]'
+                        }
+                    }) }}
+			</div>
+			<div class="text-center mt-4">
+				<a href="{{ path('app_admin_dashboard') }}" class="text-xs font-bold text-slate-600 uppercase tracking-widest hover:text-indigo-800 transition-colors">
+					Powrót do panelu
+				</a>
+			</div>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
 {% endblock %}
