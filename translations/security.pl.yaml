@@ -1,1 +1,3 @@
-"Too many failed login attempts, please try again in %minutes% minute.": "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za %minutes% minutę."
+"Invalid credentials.": "Błędny login lub hasło."
+"Invalid CSRF token.": "Nieprawidłowy token CSRF. Odśwież stronę."
+"Too many failed login attempts, please try again in %minutes% minute.": "Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za %minutes% min."

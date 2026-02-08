@@ -1,0 +1,13 @@
+<div class="px-[10px] w-full h-[60px] bg-[#072240] flex items-center justify-evenly">
+	<p class="text-white">
+		{% if is_granted('ROLE_ADMIN') %}
+			Użytkownik: Administrator
+		{% elseif is_granted('ROLE_USER')  %}
+			Użytkownik: Pracownik
+		{% endif %}
+
+	</p>
+	<a href="{{ path('app_logout') }}" class="text-white">
+		Wyloguj się
+	</a>
+</div>

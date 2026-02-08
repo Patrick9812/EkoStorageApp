@@ -54,7 +54,6 @@ security:
         - { path: ^/user/dashboard, roles: ROLE_USER }
         - { path: ^/user/article/inbound, roles: ROLE_USER }
         - { path: ^/user/article/outbound, roles: ROLE_USER }
-        # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:
