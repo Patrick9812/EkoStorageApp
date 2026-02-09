@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -22,15 +23,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'Login nie może być pusty.')]
+    #[Assert\Length(
+        min: 5,
+        minMessage: 'Login musi mieć co najmniej 5 znaków.'
+    )]
+    #[Assert\Regex(
+        pattern: '/\d/',
+        message: 'Login musi zawierać co najmniej jedną cyfrę.'
+    )]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Imię i nazwisko są wymagane.')]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'Imię i nazwisko muszą mieć min. 3 znaki.'
+    )]
     private ?string $fullName = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Musisz wybrać rolę.')]
     private array $roles = [];
 
     #[ORM\Column]
+    #[Assert\Length(
+        min: 6,
+        max: 19,
+        minMessage: 'Hasło musi mieć co najmniej 6 znaków.',
+        maxMessage: 'Hasło może mieć maksymalnie 19 znaków.'
+    )]
+    #[Assert\Regex(
+        pattern: '/[#@$!%*?&]/',
+        message: 'Hasło musi zawierać co najmniej jeden znak specjalny.'
+    )]
     private ?string $password = null;
 
     #[ORM\ManyToMany(targetEntity: Warehouse::class, inversedBy: 'users')]
@@ -60,6 +86,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->username = $username;
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username ?? 'Nowy Użytkownik';
     }
 
     public function getFullname(): ?string

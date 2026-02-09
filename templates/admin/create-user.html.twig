@@ -6,10 +6,10 @@
 {% block body %}
 	<div class="flex items-center justify-center min-h-screen w-full bg-[#124278] pt-[80px] pb-[40px]">
 		<div class="w-full max-w-2xl p-8 bg-white rounded-2xl shadow-2xl border border-white/20">
-			<h1 class="text-3xl font-black text-center text-slate-800 mb-2 tracking-tighter">Nowy Użytkownik</h1>
+			<h1 class="text-3xl font-black text-center text-slate-800 mb-2 tracking-tighter">{{ form_errors(form) }}</h1>
 			<p class="text-center text-slate-500 text-sm mb-8 font-medium">Utwórz konto dla pracownika magazynu</p>
 
-			{{ form_start(form, {'attr': {'class': 'grid grid-cols-1 md:grid-cols-2 gap-6'}}) }}
+			{{ form_start(form, {'attr': {'class': 'grid grid-cols-1 md:grid-cols-2 gap-6', 'novalidate': 'novalidate'}}) }}
 
 			<div class="space-y-4">
 				<div>
@@ -17,20 +17,42 @@
 					{{ form_widget(form.username, {'attr': {
                         'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border ' ~ (form.username.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 transition-all'
                     }}) }}
-					{{ form_errors(form.username, {'attr': {'class': 'text-red-600 text-[11px] mt-1 font-bold italic'}}) }}
+					{% if not form.username.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic list-none">
+							{{ form_errors(form.username) }}
+						</div>
+					{% endif %}
 				</div>
+
 				<div>
-					{{ form_label(form.fullname, 'Imię i Nazwisko', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.fullname, {'attr': {'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 transition-all'}}) }}
+					{{ form_label(form.fullName, 'Imię i Nazwisko', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
+					{{ form_widget(form.fullName, {
+						'attr': {'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border ' ~ (form.fullName.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 transition-all'}
+					}) }}
+
+					{% if not form.fullName.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic list-none">
+							{{ form_errors(form.fullName) }}
+						</div>
+					{% endif %}
 				</div>
+
 				<div>
 					{{ form_label(form.password.first, 'Hasło', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.password.first, {'attr': {'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 transition-all'}}) }}
-					{{ form_errors(form.password.first, {'attr': {'class': 'text-red-500 text-[10px] mt-1'}}) }}
+					{{ form_widget(form.password.first, {'attr': {
+                        'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border ' ~ (form.password.first.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 transition-all'
+                    }}) }}
+					{% if not form.password.first.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic list-none">
+							{{ form_errors(form.password.first) }}
+						</div>
+					{% endif %}
 				</div>
 				<div>
 					{{ form_label(form.password.second, 'Powtórz hasło', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.password.second, {'attr': {'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 transition-all'}}) }}
+					{{ form_widget(form.password.second, {'attr': {
+                        'class': 'w-full px-4 py-2 rounded-xl bg-slate-50 border ' ~ (form.password.second.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 transition-all'
+                    }}) }}
 				</div>
 			</div>
 
@@ -41,11 +63,9 @@
 						{% for child in form.roles %}
 							<label class="flex items-center gap-3 px-3 py-2 bg-white border border-slate-100 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors group">
 								{{ form_widget(child, {'attr': {'class': 'w-4 h-4 text-green-600 border-slate-300 focus:ring-green-500'}}) }}
-								<div class="flex flex-col">
-									<span class="text-sm font-semibold text-slate-700 group-hover:text-green-700">
-										{{ child.vars.label }}
-									</span>
-								</div>
+								<span class="text-sm font-semibold text-slate-700 group-hover:text-green-700">
+									{{ child.vars.label }}
+								</span>
 							</label>
 						{% endfor %}
 					</div>
@@ -68,11 +88,9 @@
 
 			<div class="md:col-span-2 pt-4">
 				{{ form_row(form._token) }}
-
 				<button type="submit" class="w-full py-4 bg-[#16a603] hover:bg-[#0e6b02] text-white font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]">
 					Zarejestruj użytkownika
 				</button>
-
 				<div class="text-center mt-4">
 					<a href="{{ path('app_admin_dashboard') }}" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600">Powrót do panelu</a>
 				</div>

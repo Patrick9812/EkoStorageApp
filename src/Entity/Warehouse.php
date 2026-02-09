@@ -6,6 +6,8 @@ use App\Repository\WarehouseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WarehouseRepository::class)]
 class Warehouse
@@ -16,6 +18,13 @@ class Warehouse
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Nazwa magazynu nie może być pusta.')]
+    #[Assert\Length(
+        min: 3,
+        max: 50,
+        minMessage: 'Nazwa musi mieć przynajmniej 3 znaki.',
+        maxMessage: 'Nazwa nie może przekraczać 50 znaków.'
+    )]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'warehouses')]

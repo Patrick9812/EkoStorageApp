@@ -53,6 +53,7 @@ class OutcommingTransactionsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Transaction::class,
             'user' => null,
+            'validation_groups' => ['Default'],
         ]);
     }
 }

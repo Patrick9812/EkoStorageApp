@@ -8,74 +8,106 @@
 		<div class="w-full max-w-3xl p-8 bg-white rounded-3xl shadow-2xl border border-white/20">
 			<div class="flex items-center gap-4 mb-8">
 				<div>
-					<h1 class="text-3xl font-black">Przyjęcie Artykułu</h1>
+					<h1 class="text-3xl font-black text-slate-800">Przyjęcie Artykułu</h1>
 					<p class="text-slate-500 text-sm font-medium">Wprowadź towar na stan magazynowy</p>
 				</div>
 			</div>
 
-			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+			{{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
 
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 				<div class="md:col-span-3">
 					{{ form_label(form.warehouse, 'Magazyn docelowy', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.warehouse, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all'}}) }}
-					{{ form_errors(form.warehouse) }}
+					{{ form_widget(form.warehouse, {
+                        'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.warehouse.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all'}
+                    }) }}
+					{% if not form.warehouse.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.warehouse) }}</div>
+					{% endif %}
 				</div>
 
 				<div class="md:col-span-3">
 					{{ form_label(form.article, 'Artykuł', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.article, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all'}}) }}
-					{{ form_errors(form.article) }}
+					{{ form_widget(form.article, {
+                        'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.article.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all'}
+                    }) }}
+					{% if not form.article.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.article) }}</div>
+					{% endif %}
 				</div>
 
 				<div>
 					{{ form_label(form.quantity, 'Ilość', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.quantity, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all', 'placeholder': '0.000'}}) }}
-					{{ form_errors(form.quantity) }}
+					{{ form_widget(form.quantity, {
+                        'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.quantity.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all', 'placeholder': '0.000'}
+                    }) }}
+					{% if not form.quantity.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.quantity) }}</div>
+					{% endif %}
 				</div>
 
 				<div>
 					{{ form_label(form.unit, 'Jedn. miary', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.unit, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 font-semibold text-slate-600', 'readonly': 'readonly'}}) }}
-					{{ form_errors(form.unit) }}
+					{{ form_widget(form.unit, {
+                        'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 font-semibold text-slate-600', 'readonly': 'readonly'}
+                    }) }}
 				</div>
 
 				<div>
 					{{ form_label(form.VAT, 'Stawka VAT (%)', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-					{{ form_widget(form.VAT, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all', 'placeholder': '23'}}) }}
-					{{ form_errors(form.VAT) }}
+					{{ form_widget(form.VAT, {
+                        'attr': {
+                            'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.VAT.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all', 
+                            'placeholder': '23'
+                        }
+                    }) }}
+					{% if not form.VAT.vars.valid %}
+						<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.VAT) }}</div>
+					{% endif %}
 				</div>
 			</div>
 
-			<div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+			<div class="bg-slate-50 p-6 rounded-2xl border {{ form.priceNetto.vars.valid ? 'border-slate-100' : 'border-red-500' }}">
 				{{ form_label(form.priceNetto, 'Cena jednostkowa Netto (PLN)', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-				{{ form_widget(form.priceNetto, {'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all'}}) }}
-				{{ form_errors(form.priceNetto) }}
+				{{ form_widget(form.priceNetto, {
+                    'attr': {
+                        'class': 'w-full px-4 py-3 rounded-xl bg-white border ' ~ (form.priceNetto.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all',
+                        'placeholder': '0.00'
+                    }
+                }) }}
+				{% if not form.priceNetto.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.priceNetto) }}</div>
+				{% endif %}
 			</div>
 
-			<div class="p-6 border-2 border-dashed border-slate-200 rounded-2xl hover:border-green-400 transition-colors group">
+			<div class="p-6 border-2 border-dashed {{ form.documents.vars.valid ? 'border-slate-200' : 'border-red-500' }} rounded-2xl hover:border-green-400 transition-colors group">
 				{{ form_label(form.documents, 'Załączniki (Faktury PDF/XML)', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-2'}}) }}
-				{{ form_widget(form.documents, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer'}}) }}
+				{{ form_widget(form.documents, {
+                    'attr': {
+                        'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer',
+                        'required': 'required'
+                    }
+                }) }}
 				<p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tight">* Maksymalnie 4 pliki</p>
-				{{ form_errors(form.documents) }}
+				{% if not form.documents.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-2 font-bold italic">{{ form_errors(form.documents) }}</div>
+				{% endif %}
 			</div>
 
 			<div class="pt-4">
 				<button type="submit" class="w-full py-4 bg-[#16a603] hover:bg-[#0e6b02] text-white font-black rounded-xl shadow-lg shadow-green-200 transition-all active:scale-[0.98] uppercase tracking-widest">
 					Zatwierdź Przyjęcie
 				</button>
+
 				<div class="text-center mt-6">
-					{% if is_granted('ROLE_ADMIN') %}
-						<a href="{{ path('app_admin_dashboard') }}" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">
-							Powrót do panelu
-						</a>
-					{% elseif is_granted('ROLE_USER')  %}
-						<a href="{{ path('app_user_dashboard') }}" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">
-							Powrót do panelu
-						</a>
-					{% endif %}
+					{% set dash_path = is_granted('ROLE_ADMIN') ? 'app_admin_dashboard' : 'app_user_dashboard' %}
+					<a href="{{ path(dash_path) }}" class="text-xs font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors">
+						Anuluj i powrót
+					</a>
 				</div>
 			</div>
+
+			{{ form_rest(form) }}
 			{{ form_end(form) }}
 		</div>
 	</div>

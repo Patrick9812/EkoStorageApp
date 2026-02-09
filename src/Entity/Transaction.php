@@ -7,6 +7,7 @@ use App\Repository\TransactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
@@ -22,9 +23,15 @@ class Transaction
     private ?TransactionType $type = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 3)]
+    #[Assert\NotBlank(message: 'Musisz podać ilość.')]
+    #[Assert\Positive(message: 'Ilość do wydania musi być większa od zera.')]
+    #[Assert\Type(type: 'numeric', message: 'Wprowadź poprawną liczbę.')]
     private ?string $quantity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Assert\NotBlank(groups: ['incoming'], message: 'Cena netto jest wymagana przy przyjęciu.')]
+    #[Assert\PositiveOrZero(message: 'Cena netto nie może być ujemna.')]
+    #[Assert\Type(type: 'numeric', message: 'Cena musi być liczbą.')]
     private ?string $priceNetto = null;
 
     #[ORM\Column]
@@ -36,13 +43,21 @@ class Transaction
 
     #[ORM\ManyToOne(targetEntity: Warehouse::class, inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'Wybierz magazyn.')]
     private ?Warehouse $warehouse = null;
 
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'Wybierz artykuł.')]
     private ?Article $article = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+    #[Assert\NotBlank(groups: ['incoming'], message: 'Podaj stawkę VAT.')]
+    #[Assert\Range(
+        min: 0,
+        max: 100,
+        notInRangeMessage: 'Stawka VAT musi mieścić się między 0 a 100%.'
+    )]
     private ?string $VAT = null;
 
     #[ORM\Column(length: 255, nullable: true)]

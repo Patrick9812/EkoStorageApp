@@ -65,21 +65,22 @@ class IncommingTransactionsType extends AbstractType
             ->add('priceNetto', MoneyType::class, [
                 'label' => 'Cena jednostkowa Netto',
                 'currency' => 'PLN',
-                'help' => 'Cena zakupu za jednostkę'
+                'help' => 'Cena zakupu za jednostkę',
             ])
 
             ->add('VAT', NumberType::class, [
                 'label' => 'Stawka VAT (%)',
-                'attr' => ['placeholder' => '23']
+                'attr' => ['placeholder' => '23'],
             ])
 
             ->add('documents', FileType::class, [
                 'label' => 'Faktury / Dokumenty (PDF, XML)',
                 'mapped' => false,
                 'multiple' => true,
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Count(
+                        min: 1,
                         max: 4,
                         maxMessage: 'Możesz dodać maksymalnie 4 pliki'
                     ),
@@ -107,6 +108,7 @@ class IncommingTransactionsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Transaction::class,
             'user' => null,
+            'validation_groups' => ['incoming', 'Default'],
         ]);
 
         $resolver->setRequired('user');

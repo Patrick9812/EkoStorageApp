@@ -20,7 +20,7 @@ class CreateUserType extends AbstractType
     {
         $builder
             ->add('username', null, ['label' => 'Login'])
-            ->add('fullname', null, ['label' => 'Imię i Nazwisko'])
+            ->add('fullName', null, ['label' => 'Imię i Nazwisko'])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Pracownik' => 'ROLE_USER',
@@ -53,7 +53,7 @@ class CreateUserType extends AbstractType
                     return $rolesArray[0] ?? null;
                 },
                 function ($rolesString) {
-                    return [$rolesString];
+                    return $rolesString ? [$rolesString] : [];
                 }
             ));
     }

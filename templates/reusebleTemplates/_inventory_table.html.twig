@@ -10,10 +10,13 @@
 				</tr>
 			</thead>
 			<tbody class="divide-y divide-slate-100" id="inventory-table">
+				{% set has_any_stock = false %}
+
 				{% for article in articles %}
 					{% for warehouse in warehouses %}
 						{% set stock = article.getStockInWarehouse(warehouse) %}
 						{% if stock != 0 %}
+							{% set has_any_stock = true %}
 							<tr class="hover:bg-slate-50 transition-colors warehouse-row" data-warehouse-id="{{ warehouse.id }}">
 								<td class="px-8 py-4 font-bold text-slate-800">{{ article.name }}</td>
 								<td class="px-8 py-4">
@@ -21,12 +24,23 @@
 								</td>
 								<td class="px-8 py-4 text-right">{{ stock|number_format(3, ',', ' ') }}</td>
 								<td class="px-8 py-4 text-center">
-									<span class="px-8 py-4 text-slate-800 text-center">{{ article.unit }}</span>
+									<span class="text-slate-800">{{ article.unit }}</span>
 								</td>
 							</tr>
 						{% endif %}
 					{% endfor %}
 				{% endfor %}
+
+				{% if not has_any_stock %}
+					<tr>
+						<td colspan="4" class="px-8 py-12 text-center">
+							<div class="flex flex-col items-center justify-center gap-2">
+								<span class="text-slate-300 text-5xl">📦</span>
+								<p class="text-slate-500 font-medium italic">Brak artykułów w tym magazynie</p>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
 			</tbody>
 		</table>
 	</div>

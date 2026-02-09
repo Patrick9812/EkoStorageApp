@@ -8,35 +8,48 @@
 		<div class="w-full max-w-xl p-8 bg-white rounded-3xl shadow-2xl border border-white/20">
 
 			{% for message in app.flashes('error') %}
-				<div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-500 rounded-xl flex items-center gap-3">
+				<div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-500 rounded-xl flex items-center gap-3 font-bold text-sm italic">
 					{{ message }}
 				</div>
 			{% endfor %}
 
 			<div class="flex items-center gap-4 mb-8">
-				<div>
-					<h1 class="text-3xl font-black text-slate-800">Wydanie Artykułu</h1>
-				</div>
+				<h1 class="text-3xl font-black text-slate-800">Wydanie Artykułu</h1>
 			</div>
 
-			{{ form_start(form, {'attr': {'class': 'space-y-6', 'data-turbo': 'false'}}) }}
+			{{ form_start(form, {'attr': {'class': 'space-y-6', 'data-turbo': 'false', 'novalidate': 'novalidate'}}) }}
 
 			<div>
 				{{ form_label(form.article, 'Wybierz Artykuł', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-				{{ form_widget(form.article, {'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all text-lg font-medium'}}) }}
-				{{ form_errors(form.article) }}
+				{{ form_widget(form.article, {
+                    'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.article.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-medium'}
+                }) }}
+				{% if not form.article.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.article) }}</div>
+				{% endif %}
 			</div>
 
 			<div>
 				{{ form_label(form.warehouse, 'Z magazynu', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-				{{ form_widget(form.warehouse, {'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all font-medium'}}) }}
-				{{ form_errors(form.warehouse) }}
+				{{ form_widget(form.warehouse, {
+                    'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.warehouse.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all font-medium'}
+                }) }}
+				{% if not form.warehouse.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.warehouse) }}</div>
+				{% endif %}
 			</div>
 
 			<div>
 				{{ form_label(form.quantity, 'Ilość do wydania', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
-				{{ form_widget(form.quantity, {'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-green-500 transition-all text-2xl font-black', 'placeholder': '0.000'}}) }}
-				{{ form_errors(form.quantity) }}
+				{{ form_widget(form.quantity, {
+                    'attr': {
+                        'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.quantity.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-700', 
+                        'placeholder': '0.000'
+                    }
+                }) }}
+				{% if not form.quantity.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.quantity) }}</div>
+				{% endif %}
 			</div>
 
 			<div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">

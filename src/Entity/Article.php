@@ -5,9 +5,13 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[UniqueEntity(fields: ['code'], message: 'Artykuł o tym kodzie już istnieje.')]
+#[UniqueEntity(fields: ['name'], message: 'Artykuł o tej nazwie już istnieje.')]
 class Article
 {
     #[ORM\Id]
@@ -15,13 +19,21 @@ class Article
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'Nazwa artykułu nie może być pusta.')]
+    #[Assert\Length(min: 3, minMessage: 'Nazwa musi mieć co najmniej 3 znaki.')]
     private ?string $name = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]
+    #[Assert\NotBlank(message: 'Kod artykułu jest wymagany.')]
+    #[Assert\Regex(
+        pattern: '/^[A-Z0-9_-]+$/i',
+        message: 'Kod może zawierać tylko litery, cyfry, myślniki i podkreślenia.'
+    )]
     private ?string $code = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: 'Podaj jednostkę (np. szt, kg).')]
     private ?string $unit = null;
 
     #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'article')]

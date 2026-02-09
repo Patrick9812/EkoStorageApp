@@ -44,13 +44,19 @@ final class AdminController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher
     ): Response {
         $newUser = new User();
+        $newUser->setRoles(['ROLE_USER']);
         $form = $this->createForm(CreateUserType::class, $newUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('password')->getData();
             $newUser->setPassword($userPasswordHasher->hashPassword($newUser, $plainPassword));
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['username' => $newUser->getUsername()]);
 
+            if ($existingUser) {
+                $this->addFlash('error', 'Login ' . $newUser->getUsername() . ' jest już zajęty!');
+                return $this->render('admin/create-user.html.twig', ["form" => $form]);
+            }
             $roles = $newUser->getRoles();
 
             if (!in_array('ROLE_USER', $roles)) {
