@@ -29,14 +29,16 @@ class NewStorageType extends AbstractType
                 'label' => 'Utwórz magazyn'
             ]);
 
-        $builder
-            ->add('users', EntityType::class, [
-                'class' => User::class,
-                'multiple' => true,
-                'expanded' => true,
-                'by_reference' => false,
-                'choice_label' => 'fullname',
-            ]);
+        $builder->add('users', EntityType::class, [
+            'class' => User::class,
+            'multiple' => true,
+            'expanded' => true,
+            'choice_label' => function (User $user) {
+                $key = $_ENV['CRYPTO_KEY'] ?? 'twoj_domyslny_klucz';
+                return $user->getDecryptedFullname($key);
+            },
+            'label' => 'PRZYPISZ PRACOWNIKÓW',
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

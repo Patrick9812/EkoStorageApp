@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="flex items-center justify-center min-h-screen bg-slate-100">
+		<div class="text-center p-10 bg-white rounded-2xl shadow-xl border border-slate-200 max-w-lg">
+			<h1 class="text-4xl font-black text-slate-800 mb-4">Przerwa Techniczna</h1>
+			<p class="text-slate-600 mb-6">Przepraszamy, ale nasze serwery bazodanowe są obecnie niedostępne. Pracujemy nad przywróceniem dostępu.</p>
+			<button onclick="window.location.reload()" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all">
+				Spróbuj ponownie
+			</button>
+		</div>
+	</div>
+{% endblock %}

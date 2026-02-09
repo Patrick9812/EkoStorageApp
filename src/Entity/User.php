@@ -165,4 +165,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return $this;
     }
+
+    public function getDecryptedFullname(string $cryptoKey): string
+    {
+        $currentValue = $this->getFullname();
+
+        if (!$currentValue || !str_contains($currentValue, ':')) {
+            return $currentValue ?? '';
+        }
+
+        try {
+            list($ivBase64, $encryptedData) = explode(':', $currentValue, 2);
+            return openssl_decrypt($encryptedData, 'aes-256-cbc', $cryptoKey, 0, base64_decode($ivBase64));
+        } catch (\Exception $e) {
+            return "Błąd danych";
+        }
+    }
 }

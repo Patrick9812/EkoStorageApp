@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260208134238 extends AbstractMigration
+final class Version20260209131041 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,7 +22,7 @@ final class Version20260208134238 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE article (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(50) NOT NULL, unit VARCHAR(20) NOT NULL, PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE invoice_file (id INT AUTO_INCREMENT NOT NULL, file_name VARCHAR(255) NOT NULL, original_name VARCHAR(255) NOT NULL, transaction_id INT NOT NULL, INDEX IDX_8E5A54752FC0CB0F (transaction_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE transaction (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(255) NOT NULL, quantity NUMERIC(10, 3) NOT NULL, price_netto NUMERIC(10, 2) DEFAULT NULL, created_at DATETIME NOT NULL, vat NUMERIC(5, 2) DEFAULT NULL, user_id INT NOT NULL, warehouse_id INT NOT NULL, article_id INT NOT NULL, INDEX IDX_723705D1A76ED395 (user_id), INDEX IDX_723705D15080ECDE (warehouse_id), INDEX IDX_723705D17294869C (article_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE transaction (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(255) NOT NULL, quantity NUMERIC(10, 3) NOT NULL, price_netto NUMERIC(10, 2) DEFAULT NULL, created_at DATETIME NOT NULL, vat NUMERIC(5, 2) DEFAULT NULL, unit VARCHAR(255) DEFAULT NULL, user_id INT NOT NULL, warehouse_id INT NOT NULL, article_id INT NOT NULL, INDEX IDX_723705D1A76ED395 (user_id), INDEX IDX_723705D15080ECDE (warehouse_id), INDEX IDX_723705D17294869C (article_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE `user` (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(180) NOT NULL, full_name VARCHAR(255) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_IDENTIFIER_USERNAME (username), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE warehouse_user (user_id INT NOT NULL, warehouse_id INT NOT NULL, INDEX IDX_52F9D69DA76ED395 (user_id), INDEX IDX_52F9D69D5080ECDE (warehouse_id), PRIMARY KEY (user_id, warehouse_id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE warehouse (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
