@@ -37,6 +37,10 @@ class Transaction
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    #[Assert\NotBlank(message: 'Kod transakcji jest wymagany.')]
+    private ?string $code = null;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -69,6 +73,18 @@ class Transaction
     public function __construct()
     {
         $this->invoiceFiles = new ArrayCollection();
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
     public function getId(): ?int

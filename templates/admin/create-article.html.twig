@@ -22,16 +22,6 @@
 			</div>
 
 			<div>
-				{{ form_label(form.code, 'Kod artykułu', {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1'}}) }}
-				{{ form_widget(form.code, {
-                    'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.code.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all', 'placeholder': 'ART-123-X'}
-                }) }}
-				{% if not form.code.vars.valid %}
-					<div class="text-red-600 text-[10px] mt-1 font-bold italic list-none">{{ form_errors(form.code) }}</div>
-				{% endif %}
-			</div>
-
-			<div>
 				{{ form_label(form.unit, 'Jednostka miary', {'label_attr': {'class': 'block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1'}}) }}
 				{{ form_widget(form.unit, {
                     'attr': {'class': 'w-full px-4 py-3 rounded-xl bg-slate-50 border ' ~ (form.unit.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all', 'placeholder': 'szt'}

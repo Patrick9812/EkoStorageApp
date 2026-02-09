@@ -9,6 +9,7 @@ use App\Entity\Article;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -31,6 +32,11 @@ class OutcommingTransactionsType extends AbstractType
                         ->where('u.id = :userId')
                         ->setParameter('userId', $user->getId());
                 },
+            ])
+
+            ->add('code', TextType::class, [
+                'label' => 'Kod wydania',
+                'attr' => ['placeholder' => 'Wpisz kod partii, którą wydajesz']
             ])
             ->add('article', EntityType::class, [
                 'class' => Article::class,

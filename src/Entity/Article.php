@@ -24,14 +24,6 @@ class Article
     #[Assert\Length(min: 3, minMessage: 'Nazwa musi mieć co najmniej 3 znaki.')]
     private ?string $name = null;
 
-    #[ORM\Column(length: 50, unique: true)]
-    #[Assert\NotBlank(message: 'Kod artykułu jest wymagany.')]
-    #[Assert\Regex(
-        pattern: '/^[A-Z0-9_-]+$/i',
-        message: 'Kod może zawierać tylko litery, cyfry, myślniki i podkreślenia.'
-    )]
-    private ?string $code = null;
-
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank(message: 'Podaj jednostkę (np. szt, kg).')]
     private ?string $unit = null;
@@ -55,15 +47,6 @@ class Article
     public function setName(string $name): static
     {
         $this->name = $name;
-        return $this;
-    }
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-    public function setCode(string $code): static
-    {
-        $this->code = $code;
         return $this;
     }
     public function getUnit(): ?string

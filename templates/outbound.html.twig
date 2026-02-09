@@ -20,6 +20,19 @@
 			{{ form_start(form, {'attr': {'class': 'space-y-6', 'data-turbo': 'false', 'novalidate': 'novalidate'}}) }}
 
 			<div>
+				{{ form_label(form.code, 'Kod Wydania / Numer Dokumentu', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
+				{{ form_widget(form.code, {
+                    'attr': {
+                        'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.code.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-mono',
+                        'placeholder': 'Np. WZ/2026/02/09'
+                    }
+                }) }}
+				{% if not form.code.vars.valid %}
+					<div class="text-red-600 text-[10px] mt-1 font-bold italic">{{ form_errors(form.code) }}</div>
+				{% endif %}
+			</div>
+
+			<div>
 				{{ form_label(form.article, 'Wybierz Artykuł', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
 				{{ form_widget(form.article, {
                     'attr': {'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.article.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-medium'}
@@ -43,7 +56,7 @@
 				{{ form_label(form.quantity, 'Ilość do wydania', {'label_attr': {'class': 'block text-xs font-bold uppercase text-slate-500 mb-1'}}) }}
 				{{ form_widget(form.quantity, {
                     'attr': {
-                        'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.quantity.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-700', 
+                        'class': 'w-full px-4 py-4 rounded-xl bg-slate-50 border ' ~ (form.quantity.vars.valid ? 'border-slate-200' : 'border-red-500') ~ ' focus:ring-2 focus:ring-green-500 transition-all text-lg font-bold', 
                         'placeholder': '0.000'
                     }
                 }) }}
@@ -72,8 +85,8 @@
 				</div>
 			</div>
 
-			{{ form_rest(form) }}
-			{{ form_end(form) }}
+			{{ form_widget(form._token) }}
+			{{ form_end(form, {'render_rest': false}) }}
 		</div>
 	</div>
 {% endblock %}

@@ -45,51 +45,55 @@ final class AdminController extends AbstractController
     ): Response {
         $newUser = new User();
         $newUser->setRoles(['ROLE_USER']);
+
         $form = $this->createForm(CreateUserType::class, $newUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('password')->getData();
-            $newUser->setPassword($userPasswordHasher->hashPassword($newUser, $plainPassword));
-            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['username' => $newUser->getUsername()]);
 
+            if (null === $plainPassword) {
+                $this->addFlash('error', 'Hasło nie może być puste.');
+                return $this->render('admin/create-user.html.twig', ["form" => $form]);
+            }
+
+            $newUser->setPassword($userPasswordHasher->hashPassword($newUser, $plainPassword));
+
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy(['username' => $newUser->getUsername()]);
             if ($existingUser) {
                 $this->addFlash('error', 'Login ' . $newUser->getUsername() . ' jest już zajęty!');
                 return $this->render('admin/create-user.html.twig', ["form" => $form]);
             }
-            $roles = $newUser->getRoles();
 
+            $roles = $newUser->getRoles();
             if (!in_array('ROLE_USER', $roles)) {
                 $roles[] = 'ROLE_USER';
-            } else {
-                $roles = [reset($roles)];
             }
+            $newUser->setRoles(array_unique($roles));
+            try {
+                $key = $_ENV['CRYPTO_KEY'] ?? $this->getParameter('kernel.secret');
+                $cipher = 'aes-256-cbc';
+                $plainFullname = $newUser->getFullname();
 
-            $newUser->setRoles($roles);
+                if ($plainFullname) {
+                    $ivLength = openssl_cipher_iv_length($cipher);
+                    $iv = openssl_random_pseudo_bytes($ivLength);
+                    $encryptedFullname = openssl_encrypt($plainFullname, $cipher, $key, 0, $iv);
+                    $newUser->setFullname(base64_encode($iv) . ':' . $encryptedFullname);
+                }
 
-            $key = $_ENV['CRYPTO_KEY'] ?? $this->getParameter('kernel.secret');
-            $cipher = 'aes-256-cbc';
+                $entityManager->persist($newUser);
+                $entityManager->flush();
 
-            $plainFullname = $newUser->getFullname();
-
-            if ($plainFullname) {
-                $ivLength = openssl_cipher_iv_length($cipher);
-                $iv = openssl_random_pseudo_bytes($ivLength);
-
-                $encryptedFullname = openssl_encrypt($plainFullname, $cipher, $key, 0, $iv);
-                $newUser->setFullname(base64_encode($iv) . ':' . $encryptedFullname);
+                $this->addFlash('success', 'Użytkownik utworzony pomyślnie!');
+                return $this->redirectToRoute('app_admin_dashboard');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Błąd podczas zapisywania danych: ' . $e->getMessage());
             }
-
-            $entityManager->persist($newUser);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Użytkownik utworzony z zaszyfrowanymi danymi!');
-            return $this->redirectToRoute('app_admin_dashboard');
         }
 
         return $this->render('admin/create-user.html.twig', ["form" => $form]);
     }
-
     #[Route('/article/inbound', name: 'app_admin_inbound', methods: ['GET', 'POST'])]
     public function inbound(
         Request $request,

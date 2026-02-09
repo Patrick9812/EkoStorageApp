@@ -73,6 +73,11 @@ class IncommingTransactionsType extends AbstractType
                 'attr' => ['placeholder' => '23'],
             ])
 
+            ->add('code', TextType::class, [
+                'label' => 'Numer Partii / Dokumentu',
+                'attr' => ['placeholder' => 'NP: FV/2024/01/01 lub EAN']
+            ])
+
             ->add('documents', FileType::class, [
                 'label' => 'Faktury / Dokumenty (PDF, XML)',
                 'mapped' => false,
@@ -80,7 +85,6 @@ class IncommingTransactionsType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Count(
-                        min: 1,
                         max: 4,
                         maxMessage: 'Możesz dodać maksymalnie 4 pliki'
                     ),
