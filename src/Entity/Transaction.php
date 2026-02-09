@@ -45,6 +45,9 @@ class Transaction
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
     private ?string $VAT = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $unit = null;
+
     #[ORM\OneToMany(targetEntity: InvoiceFile::class, mappedBy: 'transaction', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $invoiceFiles;
 
@@ -181,6 +184,17 @@ class Transaction
             }
         }
 
+        return $this;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(?string $unit): self
+    {
+        $this->unit = $unit;
         return $this;
     }
 }

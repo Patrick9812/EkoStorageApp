@@ -19,9 +19,9 @@
 								<td class="px-8 py-4">
 									<span class="px-2 py-1 bg-slate-100 rounded text-xs">{{ warehouse.name }}</span>
 								</td>
-								<td class="px-8 py-4 text-right font-black">{{ stock|number_format(3, ',', ' ') }}</td>
+								<td class="px-8 py-4 text-right">{{ stock|number_format(3, ',', ' ') }}</td>
 								<td class="px-8 py-4 text-center">
-									<span class="inline-block w-3 h-3 rounded-full {{ stock > 0 ? 'bg-green-500' : 'bg-red-500' }}"></span>
+									<span class="px-8 py-4 text-slate-800 text-center">{{ article.unit }}</span>
 								</td>
 							</tr>
 						{% endif %}

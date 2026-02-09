@@ -2,40 +2,57 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
 use App\Entity\Transaction;
+use App\Entity\User;
+use App\Entity\Warehouse;
+use App\Entity\Article;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class OutcommingTransactionsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['user'];
+
         $builder
+            ->add('warehouse', EntityType::class, [
+                'class' => Warehouse::class,
+                'choice_label' => 'name',
+                'label' => 'Z magazynu',
+                'attr' => ['class' => 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all'],
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('w')
+                        ->innerJoin('w.users', 'u')
+                        ->where('u.id = :userId')
+                        ->setParameter('userId', $user->getId());
+                },
+            ])
             ->add('article', EntityType::class, [
                 'class' => Article::class,
                 'choice_label' => 'name',
-                'label' => 'Artykuł do wydania',
-                'placeholder' => 'Wybierz produkt...',
+                'label' => 'Artykuł',
+                'attr' => ['class' => 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all'],
             ])
             ->add('quantity', NumberType::class, [
-                'label' => 'Ilość wydawana',
-                'html5' => true,
+                'label' => 'Ilość do wydania',
                 'attr' => [
                     'step' => '0.001',
-                    'placeholder' => '0.000'
+                    'placeholder' => '0.000',
+                    'class' => 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Transaction::class,
+            'user' => null,
         ]);
     }
 }

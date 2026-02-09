@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Article;
 use App\Entity\Transaction;
+use App\Entity\Warehouse;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -11,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\File;
@@ -19,6 +22,7 @@ class IncommingTransactionsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['user'];
         $builder
             ->add('article', EntityType::class, [
                 'class' => Article::class,
@@ -28,10 +32,34 @@ class IncommingTransactionsType extends AbstractType
                 'attr' => ['class' => 'form-select-lg']
             ])
 
+            ->add('warehouse', EntityType::class, [
+                'class' => Warehouse::class,
+                'choice_label' => 'name',
+                'label' => 'Magazyn docelowy',
+                'placeholder' => 'Wybierz magazyn...',
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('w')
+                        ->innerJoin('w.users', 'u')
+                        ->where('u.id = :user')
+                        ->setParameter('user', $user);
+                },
+            ])
+
             ->add('quantity', NumberType::class, [
                 'label' => 'Ilość przyjęta',
                 'html5' => true,
                 'attr' => ['step' => '0.001', 'placeholder' => '0.000']
+            ])
+
+            ->add('unit', TextType::class, [
+                'label' => 'Jednostka miary',
+                'disabled' => true,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Pobierana z artykułu',
+                    'class' => 'bg-light'
+                ],
+                'help' => 'Jednostka zdefiniowana przez administratora dla wybranego artykułu.'
             ])
 
             ->add('priceNetto', MoneyType::class, [
@@ -78,6 +106,9 @@ class IncommingTransactionsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Transaction::class,
+            'user' => null,
         ]);
+
+        $resolver->setRequired('user');
     }
 }

@@ -33,25 +33,23 @@ class AppFixtures extends Fixture
         $article->setUnit('szt.');
         $article->setCode('123');
         $manager->persist($article);
+
         $admin = new User();
         $admin->setUsername($this->adminLogin);
         $admin->setFullname('Główny Administrator');
-
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $admin,
-            $this->adminPassword
-        );
-        $admin->setPassword($hashedPassword);
         $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, $this->adminPassword));
 
+        $admin->addWarehouse($warehouse);
         $manager->persist($admin);
 
         $user = new User();
         $user->setUsername('pracownik1');
         $user->setFullname('Jan Kowalski');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'pracownik123'));
         $user->setRoles(['ROLE_USER']);
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'pracownik123'));
 
+        $user->addWarehouse($warehouse);
         $manager->persist($user);
 
         $manager->flush();
