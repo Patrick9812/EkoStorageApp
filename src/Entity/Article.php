@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[UniqueEntity(fields: ['code'], message: 'Artykuł o tym kodzie już istnieje.')]
 #[UniqueEntity(fields: ['name'], message: 'Artykuł o tej nazwie już istnieje.')]
 class Article
 {

@@ -14,7 +14,6 @@ class NewArticleType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('code')
             ->add('unit')
             ->add("submit", SubmitType::class)
         ;
