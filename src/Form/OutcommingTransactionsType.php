@@ -27,10 +27,14 @@ class OutcommingTransactionsType extends AbstractType
                 'label' => 'Z magazynu',
                 'attr' => ['class' => 'w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all'],
                 'query_builder' => function (EntityRepository $er) use ($user) {
-                    return $er->createQueryBuilder('w')
-                        ->innerJoin('w.users', 'u')
+                    $qb = $er->createQueryBuilder('w');
+                    if ($user && in_array('ROLE_ADMIN', $user->getRoles())) {
+                        return $qb->orderBy('w.name', 'ASC');
+                    }
+                    return $qb->innerJoin('w.users', 'u')
                         ->where('u.id = :userId')
-                        ->setParameter('userId', $user->getId());
+                        ->setParameter('userId', $user->getId())
+                        ->orderBy('w.name', 'ASC');
                 },
             ])
 
