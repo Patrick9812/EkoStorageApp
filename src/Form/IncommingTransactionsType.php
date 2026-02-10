@@ -38,10 +38,15 @@ class IncommingTransactionsType extends AbstractType
                 'label' => 'Magazyn docelowy',
                 'placeholder' => 'Wybierz magazyn...',
                 'query_builder' => function (EntityRepository $er) use ($user) {
-                    return $er->createQueryBuilder('w')
-                        ->innerJoin('w.users', 'u')
+                    $qb = $er->createQueryBuilder('w');
+                    if ($user && in_array('ROLE_ADMIN', $user->getRoles())) {
+                        return $qb->orderBy('w.name', 'ASC');
+                    }
+
+                    return $qb->innerJoin('w.users', 'u')
                         ->where('u.id = :user')
-                        ->setParameter('user', $user);
+                        ->setParameter('user', $user)
+                        ->orderBy('w.name', 'ASC');
                 },
             ])
 
