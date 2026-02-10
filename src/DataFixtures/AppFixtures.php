@@ -47,7 +47,6 @@ class AppFixtures extends Fixture
         $article = new Article();
         $article->setName('Paleta Drewniana');
         $article->setUnit('szt.');
-        $article->setCode('123');
         $manager->persist($article);
 
         $admin = new User();
